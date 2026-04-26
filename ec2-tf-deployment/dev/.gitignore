@@ -1,0 +1,14 @@
+# Terraform state and cache
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Secret variable files — never commit these
+secrets.auto.tfvars
+*.secrets.tfvars
