@@ -86,6 +86,12 @@ variable "key_pair_name" {
   default     = ""
 }
 
+variable "root_volume_size" {
+  description = "Root EBS volume size in GiB"
+  type        = number
+  default     = 30
+}
+
 variable "allowed_ssh_cidrs" {
   description = "CIDR blocks allowed for SSH (port 22)"
   type        = list(string)

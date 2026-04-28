@@ -4,8 +4,8 @@ output "instance_id" {
 }
 
 output "public_ip" {
-  description = "Public IP address"
-  value       = module.ec2.public_ip
+  description = "Public static Elastic IP"
+  value       = aws_eip.sob.public_ip
 }
 
 output "public_dns" {
@@ -15,10 +15,15 @@ output "public_dns" {
 
 output "client_url" {
   description = "Client app URL"
-  value       = "http://${module.ec2.public_dns}"
+  value       = "http://${aws_eip.sob.public_ip}"
 }
 
 output "author_url" {
   description = "Author admin panel URL"
-  value       = "http://${module.ec2.public_dns}:3001"
+  value       = "http://${aws_eip.sob.public_ip}:3001"
+}
+
+output "elastic_ip" {
+  description = "Elastic IP address attached to the instance"
+  value       = aws_eip.sob.public_ip
 }

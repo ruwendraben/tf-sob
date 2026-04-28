@@ -16,4 +16,5 @@ db_ssl  = true
 max_file_size_mb = 10
 admin_username   = "admin"
 
-key_pair_name = "london-ec2"
+key_pair_name = "tf_ec2_instance"
+root_volume_size = 30

@@ -59,6 +59,7 @@ module "ec2" {
   iam_instance_profile = module.iam.instance_profile_name
   security_group_id    = module.security_group.security_group_id
   key_pair_name        = var.key_pair_name
+  root_volume_size     = var.root_volume_size
   environment          = "dev"
 
   user_data = templatefile("${path.module}/user_data.sh", {
@@ -77,4 +78,22 @@ module "ec2" {
     admin_username                 = var.admin_username
     admin_password_hash            = var.admin_password_hash
   })
+}
+
+resource "aws_eip" "sob" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "${var.instance_name}-eip"
+    Environment = "dev"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "aws_eip_association" "sob" {
+  instance_id   = module.ec2.instance_id
+  allocation_id = aws_eip.sob.id
 }
