@@ -12,3 +12,8 @@ output "public_dns" {
   description = "Public DNS name"
   value       = aws_instance.sob.public_dns
 }
+
+output "availability_zone" {
+  description = "Availability zone of the EC2 instance"
+  value       = aws_instance.sob.availability_zone
+}
