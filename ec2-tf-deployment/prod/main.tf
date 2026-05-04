@@ -19,13 +19,13 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_ami" "amazon_linux_2023" {
+data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 
   filter {
@@ -56,7 +56,8 @@ module "ec2" {
   source = "../modules/ec2"
 
   instance_name        = var.instance_name
-  ami_id               = data.aws_ami.amazon_linux_2023.id
+  ami_id               = data.aws_ami.amazon_linux_2.id
+  availability_zone    = "eu-west-2c"
   iam_instance_profile = module.iam.instance_profile_name
   security_group_id    = module.security_group.security_group_id
   key_pair_name        = var.key_pair_name
@@ -98,7 +99,7 @@ resource "aws_eip_association" "sob" {
 
 # ── Persistent EBS volume for Postgres data ────────────────────────────────────
 resource "aws_ebs_volume" "postgres" {
-  availability_zone = module.ec2.availability_zone
+  availability_zone = "eu-west-2c"
   size              = 20
   type              = "gp3"
 
@@ -119,54 +120,4 @@ resource "aws_volume_attachment" "postgres" {
   force_detach = false
 }
 
-# ── Scoped policy for existing prod-user ──────────────────────────────────────
-data "aws_iam_user" "prod_user" {
-  user_name = "prod-user"
-}
 
-resource "aws_iam_user_policy" "terraform_prod_policy" {
-  name = "terraform-prod-policy"
-  user = data.aws_iam_user.prod_user.user_name
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        # Hard deny: cannot touch anything tagged Environment=dev
-        Sid      = "DenyDevResources"
-        Effect   = "Deny"
-        Action   = "*"
-        Resource = "*"
-        Condition = {
-          StringEquals = {
-            "aws:ResourceTag/Environment" = "dev"
-          }
-        }
-      },
-      {
-        # Hard deny: cannot create resources without the prod tag
-        Sid    = "EnforceTagOnCreate"
-        Effect = "Deny"
-        Action = [
-          "ec2:RunInstances",
-          "ec2:CreateVolume",
-          "ec2:AllocateAddress",
-          "elasticloadbalancing:CreateLoadBalancer"
-        ]
-        Resource = "*"
-        Condition = {
-          StringNotEquals = {
-            "aws:RequestTag/Environment" = "prod"
-          }
-        }
-      },
-      {
-        # Allow everything else (prod + account-level operations)
-        Sid      = "AllowAll"
-        Effect   = "Allow"
-        Action   = "*"
-        Resource = "*"
-      }
-    ]
-  })
-}

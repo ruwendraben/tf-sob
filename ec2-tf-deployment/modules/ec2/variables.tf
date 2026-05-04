@@ -45,3 +45,9 @@ variable "environment" {
   description = "Environment tag"
   type        = string
 }
+
+variable "availability_zone" {
+  description = "AZ to launch the instance in; empty means AWS chooses"
+  type        = string
+  default     = ""
+}

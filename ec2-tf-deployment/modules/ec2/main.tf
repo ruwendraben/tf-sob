@@ -1,6 +1,7 @@
 resource "aws_instance" "sob" {
   ami                          = var.ami_id
   instance_type                = var.instance_type
+  availability_zone            = var.availability_zone != "" ? var.availability_zone : null
   iam_instance_profile         = var.iam_instance_profile
   vpc_security_group_ids       = [var.security_group_id]
   key_name                     = var.key_pair_name != "" ? var.key_pair_name : null
