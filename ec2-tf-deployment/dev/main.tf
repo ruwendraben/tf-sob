@@ -87,10 +87,6 @@ resource "aws_eip" "sob" {
     Name        = "${var.instance_name}-eip"
     Environment = "dev"
   }
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_eip_association" "sob" {
