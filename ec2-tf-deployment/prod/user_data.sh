@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# ── System update ─────────────────────────────────────────────────────────────
-yum update -y
-
 # ── Install k3s ───────────────────────────────────────────────────────────────
 curl -sfL https://get.k3s.io | sh -
 

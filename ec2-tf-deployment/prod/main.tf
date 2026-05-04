@@ -19,13 +19,13 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_ami" "amazon_linux_2" {
+data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+    values = ["al2023-ami-*-x86_64"]
   }
 
   filter {
@@ -56,7 +56,7 @@ module "ec2" {
   source = "../modules/ec2"
 
   instance_name        = var.instance_name
-  ami_id               = data.aws_ami.amazon_linux_2.id
+  ami_id               = data.aws_ami.amazon_linux.id
   availability_zone    = "eu-west-2c"
   iam_instance_profile = module.iam.instance_profile_name
   security_group_id    = module.security_group.security_group_id
