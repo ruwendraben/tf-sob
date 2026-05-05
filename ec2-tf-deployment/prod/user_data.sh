@@ -44,3 +44,10 @@ configs:
       username: AWS
       password: "$(aws ecr get-login-password --region ${aws_region})"
 EOF
+
+# ── Install cert-manager ───────────────────────────────────────────────────────
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+
+# Wait for cert-manager to be ready
+kubectl rollout status deployment/cert-manager -n cert-manager --timeout=120s
+kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=120s

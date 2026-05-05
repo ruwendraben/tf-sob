@@ -10,6 +10,12 @@ variable "instance_name" {
   default     = "tf-prod"
 }
 
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.small"
+}
+
 variable "ecr_registry" {
   description = "ECR registry base URL (account.dkr.ecr.region.amazonaws.com)"
   type        = string

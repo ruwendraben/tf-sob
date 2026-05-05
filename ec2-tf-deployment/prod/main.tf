@@ -57,6 +57,7 @@ module "ec2" {
 
   instance_name        = var.instance_name
   ami_id               = data.aws_ami.amazon_linux.id
+  instance_type        = var.instance_type
   availability_zone    = "eu-west-2c"
   iam_instance_profile = module.iam.instance_profile_name
   security_group_id    = module.security_group.security_group_id
