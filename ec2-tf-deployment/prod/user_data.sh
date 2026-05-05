@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# ── Install SSM agent ─────────────────────────────────────────────────────────
+dnf install -y amazon-ssm-agent
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
 # ── Install k3s ───────────────────────────────────────────────────────────────
 curl -sfL https://get.k3s.io | sh -
 
